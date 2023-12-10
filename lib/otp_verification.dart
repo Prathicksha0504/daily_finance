@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pin_input_text_field/pin_input_text_field.dart';
 
 void main() {
   runApp(MyApp());
@@ -24,11 +25,6 @@ class OTPVerificationScreen extends StatefulWidget {
 class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
   TextEditingController _otpController = TextEditingController();
 
-  // Function to check if the entered OTP is valid (4 digits)
-  bool isOtpValid(String otp) {
-    return otp.length == 4 && int.tryParse(otp) != null;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -49,31 +45,25 @@ class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
               ),
             ),
             SizedBox(height: 16),
-            TextField(
+            PinInputTextField(
+              pinLength: 4,
               controller: _otpController,
               keyboardType: TextInputType.number,
-              maxLength: 4, // Set maximum length to 4 digits
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 20, color: Colors.blue),
-              decoration: InputDecoration(
-                counterText: '', // Hide the character counter
-                hintText: 'Enter OTP',
-                hintStyle: TextStyle(color: Colors.blue.withOpacity(0.7)),
-                enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: Colors.blue),
-                  borderRadius: BorderRadius.circular(10),
-                ),
+              decoration: UnderlineDecoration(
+                colorBuilder: PinListenColorBuilder(Colors.blue, Colors.blue),
               ),
+              autoFocus: true,
+              textInputAction: TextInputAction.done,
+              onSubmit: (pin) {
+                print('Entered OTP: $pin');
+                // Add your verification logic here
+              },
             ),
             SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
                 String enteredOTP = _otpController.text;
-                if (isOtpValid(enteredOTP)) {
+                if (enteredOTP.length == 4) {
                   print('Entered OTP: $enteredOTP');
                   // Add your verification logic here
                 } else {
